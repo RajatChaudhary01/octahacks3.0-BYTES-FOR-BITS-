@@ -1,0 +1,60 @@
+#include "DHT.h"
+#define DHTPIN 12 //Define sensor pin(pin 12)
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+boolean a=LOW,b=LOW,c=LOW;
+float h=0,t=0;
+const int ledPin = 6; 
+const int ledPin2 = 4;
+const int ledPin3 = 2;
+long previousMillis = 0;
+long interval = 2000; 
+
+void setup() {
+pinMode(ledPin, OUTPUT);
+pinMode(ledPin2, OUTPUT);
+pinMode(ledPin3, OUTPUT);
+dht.begin();//Start DHT22 sensor
+digitalWrite(ledPin2,LOW);
+digitalWrite(ledPin,LOW);
+digitalWrite(ledPin3,LOW);
+}
+
+void loop()
+{
+  unsigned long currentMillis = millis();
+  if(currentMillis - previousMillis > interval)
+  {
+    previousMillis = currentMillis;
+     t = dht.readTemperature();
+    
+    if(t>=26 && a==LOW)//
+    {
+      digitalWrite(ledPin,HIGH);
+      digitalWrite(ledPin2,LOW);
+      digitalWrite(ledPin3,LOW);
+      a=HIGH;
+      b=LOW;
+      c=LOW;
+    }
+      else if(t>25&&c==LOW&&t<26)
+    {
+      digitalWrite(ledPin3,HIGH);
+      digitalWrite(ledPin2,LOW);
+      digitalWrite(ledPin,LOW);
+      a=LOW;
+      b=LOW;
+      c=HIGH;
+    }
+      else if(t<=25&&b==LOW)
+    {
+      digitalWrite(ledPin2,HIGH);
+      digitalWrite(ledPin,LOW);
+      digitalWrite(ledPin3,LOW);
+      a=LOW;
+      b=HIGH;
+      c=LOW;
+    }
+    
+  }
+}
